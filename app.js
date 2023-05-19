@@ -29,7 +29,7 @@ const fetchData = async () => {
     try {
         const response = await fetch('https://globalclassroom.bierebeeck.be/status.php');
         const data = await response.json();
-        data.status === true ? poorCoffee() : console.log('No coffee');
+        data.status === true ? poorCoffee() : gpio.write(pinNumber, false);
     } catch (error) {
         console.error('Error fetching data:', error);
     }
