@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "This is the javascript code that wil run on the raspberry pi server that will be connected to a coffee machine.",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js",
@@ -21,7 +20,8 @@
   "homepage": "https://github.com/RobbeBierebeeck/tsc-coffee-client#readme",
   "dependencies": {
     "express": "^4.18.2",
-    "node-fetch": "^3.3.1"
+    "node-fetch": "^3.3.1",
+    "rpi-gpio": "^2.1.7"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
