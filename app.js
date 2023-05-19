@@ -2,31 +2,37 @@ const express = require('express');
 const gpio = require('rpi-gpio');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const app = express();
-/*
+
 // Define the port to run on
-gpio.setup(12, gpio.DIR_OUT, false);
+gpio.setup(12, gpio.DIR_OUT, 'off');
 
-// the possible states of the pin
-const on = () => { gpio.write(12, true, function(err) { if (err) throw err; console.log('Written to pin'); }); }
 
-const off = ()=> { gpio.write(12, false, function(err) { if (err) throw err; console.log('Written to pin'); }); }
-
-*/
 const poorCoffee = () => {
     console.log('poor coffee')
+    gpio.write(12, true, function (err) {
+        if (err) throw err;
+        console.log('Written to pin');
+    });
 
+    // wait 1 minutes before turning off the coffee machine
+    setTimeout(() => {
+        gpio.write(12, false, function (err) {
+            if (err) throw err;
+            console.log('Written to pin');
+        });
+    }, 60000)
     timeout()
 }
 
 // set timeout that can be triggered by the noCoffee function
 const timeout = () => {
-   //stop the setIntervall for 2 minutes
+    //stop the setIntervall for 2 minutes
     clearInterval(interval)
     // set the timeout for 2 minutes
     setTimeout(() => {
         // restart the interval
         interval = setInterval(fetchData, 5000)
-    }   , 120000)
+    }, 120000)
 
 }
 
