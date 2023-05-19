@@ -16,13 +16,20 @@ const poorCoffee = () => {
         console.log(`GPIO pin ${pinNumber} is ON.`);
     });
 
-    // Wait for 1 minute before turning off the coffee machine
+    // Wait for 1 sec before turning off the coffee machine
     setTimeout(() => {
         gpio.write(pinNumber, false, (err) => {
             if (err) throw err;
             console.log(`GPIO pin ${pinNumber} is OFF.`);
         });
-    }, 60000);
+    }, 1000 );
+
+    //stop fetching data for 1 minute
+    clearInterval(interval);
+    setTimeout(() => {
+        interval = setInterval(fetchData, 5000);
+    } , 60000);
+
 };
 
 const fetchData = async () => {
@@ -35,7 +42,7 @@ const fetchData = async () => {
     }
 };
 
-setInterval(fetchData, 5000); // Fetch data every 5 seconds
+let interval = setInterval(fetchData, 5000); // Fetch data every 5 seconds
 
 const server = app.listen(3000, () => {
     const host = server.address().address;
