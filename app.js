@@ -1,57 +1,44 @@
 const express = require('express');
 const gpio = require('rpi-gpio');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
 const app = express();
+const pinNumber = 12;
 
-// Define the port to run on
-gpio.setup(12, gpio.DIR_OUT, 'off');
-
-
-const poorCoffee = () => {
-    console.log('poor coffee')
-    gpio.write(12, true, function (err) {
-        if (err) throw err;
-        console.log('Written to pin');
-    });
-
-    // wait 1 minutes before turning off the coffee machine
-    setTimeout(() => {
-        gpio.write(12, false, function (err) {
-            if (err) throw err;
-            console.log('Written to pin');
-        });
-    }, 60000)
-    timeout()
-}
-
-// set timeout that can be triggered by the noCoffee function
-const timeout = () => {
-    //stop the setIntervall for 2 minutes
-    clearInterval(interval)
-    // set the timeout for 2 minutes
-    setTimeout(() => {
-        // restart the interval
-        interval = setInterval(fetchData, 5000)
-    }, 120000)
-
-}
-
-
-const fetchData = async () => {
-    const response = await fetch('https://globalclassroom.bierebeeck.be/status.php');
-    const data = await response.json();
-    data.status === true ? poorCoffee() : console.log('no coffee')
-}
-
-fetchData()
-
-//fetch the data every 5 seconds
-let interval = setInterval(fetchData, 5000)
-
-
-const server = app.listen(3000, function () {
-    var host = server.address().address;
-    var port = server.address().port;
-    console.log('Example app listening at http://%s:%s', host, port);
+gpio.setup(pinNumber, gpio.DIR_OUT, () => {
+    console.log(`GPIO pin ${pinNumber} is ready.`);
 });
 
+const poorCoffee = () => {
+    console.log('Pouring coffee...');
+    gpio.write(pinNumber, true, (err) => {
+        if (err) throw err;
+        console.log(`GPIO pin ${pinNumber} is ON.`);
+    });
+
+    // Wait for 1 minute before turning off the coffee machine
+    setTimeout(() => {
+        gpio.write(pinNumber, false, (err) => {
+            if (err) throw err;
+            console.log(`GPIO pin ${pinNumber} is OFF.`);
+        });
+    }, 60000);
+};
+
+const fetchData = async () => {
+    try {
+        const response = await fetch('https://globalclassroom.bierebeeck.be/status.php');
+        const data = await response.json();
+        data.status === true ? poorCoffee() : console.log('No coffee');
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+};
+
+setInterval(fetchData, 5000); // Fetch data every 5 seconds
+
+const server = app.listen(3000, () => {
+    const host = server.address().address;
+    const port = server.address().port;
+    console.log(`Server listening at http://${host}:${port}`);
+});
