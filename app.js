@@ -24,11 +24,11 @@ const poorCoffee = () => {
         });
     }, 1000 );
 
-    //stop fetching data for 1 minute
+    //stop fetching data for 5 minutes
     clearInterval(interval);
     setTimeout(() => {
         interval = setInterval(fetchData, 5000);
-    } , 60000);
+    } , 300000);
 
 };
 
