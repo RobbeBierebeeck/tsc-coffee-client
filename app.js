@@ -34,7 +34,7 @@ const poorCoffee = () => {
 
 const fetchData = async () => {
     try {
-        const response = await fetch('https://globalclassroom.bierebeeck.be/status.php');
+        const response = await fetch('http://217.182.119.171:8083/api/v1/machine-status');
         const data = await response.json();
         data.status === true ? poorCoffee() : gpio.write(pinNumber, false);
     } catch (error) {
